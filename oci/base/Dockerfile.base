@@ -1,0 +1,17 @@
+FROM python:3.10-bookworm
+
+RUN \
+        apt-get update && \
+        apt-get upgrade -y && \
+        apt-get install -y  locales gettext gettext-base && \
+        apt-get clean && \
+        dpkg-reconfigure locales && \
+        locale-gen C.UTF-8 && \
+        /usr/sbin/update-locale LANG=C.UTF-8 && \
+        mkdir -p  /var/pretalx
+
+WORKDIR /var/pretalx
+VOLUME ["/etc/pretalx", "/data", "/public"]
+EXPOSE 80
+ENTRYPOINT [ "entrypoint.sh" ]
+CMD [ "run" ]
