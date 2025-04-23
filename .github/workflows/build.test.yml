@@ -95,7 +95,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ${{ env.REGISTRY }}/${{github.repository}}/pretalx-build
+          images: ${{ env.REGISTRY }}/${{github.repository}}/pretalx-node
           tags: |
             type=sha
             type=semver,pattern=v{{version}}
@@ -108,8 +108,8 @@ jobs:
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: ./oci/build
-          file: ./oci/build/Dockerfile.build
+          context: ./oci/node
+          file: ./oci/build/Dockerfile.node
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -118,6 +118,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ${{ env.REGISTRY }}/${{github.repository}}/pretalx-build
+          subject-name: ${{ env.REGISTRY }}/${{github.repository}}/pretalx-node
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
