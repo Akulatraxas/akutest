@@ -1,0 +1,6 @@
+FROM localhost/pretalx-worker:1.0
+
+USER pretalxuser
+VOLUME ["/etc/pretalx", "/data", "/public"]
+ENTRYPOINT ["pretalx"]
+CMD ["taskworker"]
