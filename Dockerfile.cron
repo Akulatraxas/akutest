@@ -1,4 +1,6 @@
-FROM localhost/pretalx-worker:1.0
+ARG BASE_IMAGE=ghcr.io/akulatraxas/akutest/pretalx-worker:latest
+ARG VERSION=latest
+FROM ${BASE_IMAGE}  
 
 USER pretalxuser
 VOLUME ["/etc/pretalx", "/data", "/public"]

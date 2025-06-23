@@ -1,4 +1,6 @@
+ARG VERSION=latest
 FROM python:3.12-slim-bookworm
+ARG VERSION
 
 RUN apt-get update && \
     apt-get install -y git \
@@ -45,6 +47,8 @@ RUN chmod +x /usr/local/bin/pretalx && \
     rm -f pretalx.cfg && \
     chown -R pretalxuser:pretalxuser /pretalx /data /public && \
     rm -f /pretalx/src/data/.secret
+
+RUN echo "$VERSION > /pretalx-build-version"
 
 USER pretalxuser
 VOLUME ["/etc/pretalx", "/data", "/public"]
