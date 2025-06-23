@@ -48,7 +48,7 @@ RUN chmod +x /usr/local/bin/pretalx && \
     chown -R pretalxuser:pretalxuser /pretalx /data /public && \
     rm -f /pretalx/src/data/.secret
 
-RUN echo "$VERSION > /pretalx-build-version"
+RUN echo $VERSION > /pretalx-build-version
 
 USER pretalxuser
 VOLUME ["/etc/pretalx", "/data", "/public"]
