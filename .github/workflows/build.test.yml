@@ -82,7 +82,6 @@ jobs:
       RZNAME: pretalx-builder
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: build-and-push-image-worker
     concurrency:
       group: docker
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
@@ -147,9 +146,7 @@ jobs:
       RZNAME: pretalx-cron
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: build-and-push-image-worker
-    concurrency:
-      group: docker
+    needs: build-and-push-image-builder
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
@@ -213,9 +210,7 @@ jobs:
       RZNAME: pretalx-taskworker
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: build-and-push-image-worker
-    concurrency:
-      group: docker
+    needs: build-and-push-image-builder
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
       contents: read
