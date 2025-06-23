@@ -12,7 +12,7 @@ env:
 
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
-  build-and-push-image-base:
+  build-and-push-image-worker:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     concurrency:
@@ -39,7 +39,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          #images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           images: ${{ env.REGISTRY }}/${{github.repository}}/pretalx-base
           tags: |
             type=sha
@@ -53,11 +52,13 @@ jobs:
         id: push
         uses: docker/build-push-action@f2a1d5e99d037542a71f64918e516c093c6f3fc4
         with:
-          context: ./oci/base
+          context: .
           file: ./oci/base/Dockerfile.base
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ github.event.release.tag_name }}
       
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
       - name: Generate artifact attestation
@@ -67,10 +68,10 @@ jobs:
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
 
-  build-and-push-image-build:
+  build-and-push-image-builder:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    needs: build-and-push-image-base
+    needs: build-and-push-image-worker
     concurrency:
       group: docker
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
@@ -113,6 +114,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            VERSION=${{ github.event.release.tag_name }}
       
       # This step generates an artifact attestation for the image, which is an unforgeable statement about where and how it was built. It increases supply chain security for people who consume the image. For more information, see [Using artifact attestations to establish provenance for builds](/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds).
       - name: Generate artifact attestation
