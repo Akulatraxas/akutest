@@ -25,8 +25,8 @@ RUN apt-get update && \
 ENV LC_ALL=C.UTF-8
 
 COPY deploy/docker/pretalx.bash /usr/local/bin/pretalx
-COPY pretalx/pyproject.toml /pretalx
 COPY pretalx/src /pretalx/src
+COPY pretalx/pyproject.toml /pretalx/
 
 RUN pip3 install -U pip setuptools wheel typing && \
     pip3 install -e /pretalx/[mysql,postgres,redis] && \
